@@ -10,6 +10,12 @@ public class Customer {
 
 	}
 
+	public Customer(String name, String address, int category) {
+		this.name = name;
+		this.address = address;
+		this.category = category;
+	}
+
 	public Customer(int customerId, String name, String address, int category) {
 		this.customerId = customerId;
 		this.name = name;

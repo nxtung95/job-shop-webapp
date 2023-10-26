@@ -18,9 +18,21 @@ public class UserServletController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         try {
-            List<Customer> customerList = customerDao.findAll();
-            req.setAttribute("customerList", customerList);
-            req.getRequestDispatcher("user.jsp").forward(req, resp);
+            String type = req.getParameter("type");
+            List<Customer> customerList;
+            if (type == null || type.isEmpty()) {
+                customerList = customerDao.findAll();
+                req.setAttribute("customerList", customerList);
+                req.getRequestDispatcher("user.jsp").forward(req, resp);
+            } else if ("SEARCH".equalsIgnoreCase(type)) {
+                int category1 = Integer.parseInt(req.getParameter("category1"));
+                int category2 = Integer.parseInt(req.getParameter("category2"));
+                customerList = customerDao.findAllByCategory(category1, category2);
+                req.setAttribute("customerList", customerList);
+                req.getRequestDispatcher("user.jsp").forward(req, resp);
+            } else if ("ADD".equalsIgnoreCase(type)) {
+                req.getRequestDispatcher("add_user.jsp").forward(req, resp);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -29,7 +41,17 @@ public class UserServletController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         try {
-
+            String name = req.getParameter("name");
+            String address = req.getParameter("address");
+            int category = Integer.parseInt("category");
+            Customer customer = new Customer(name, address, category);
+            boolean result = customerDao.add(customer.getName(), customer.getAddress(), customer.getCategory());
+            if (result) {
+                System.out.println("Add the customer successfully");
+            } else {
+                System.out.println("Add the customer fail");
+            }
+            resp.sendRedirect(req.getContextPath() + "/users");
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -27,15 +27,19 @@
     <h1>List User</h1>
     <br/>
     <label for="firstCategory">The first category:</label>
-    <input type="number" id="firstCategory" name="firstCategory">
+    <input type="number" id="firstCategory" name="firstCategory" onchange="changeFirstCategory()">
+    <br/>
+    <label id="errorCategory1" style="visibility: hidden">Please enter this category</label>
     <br/>
     <br/>
     <label for="firstCategory">The second category:</label>
-    <input type="number" id="secondCategory" name="secondCategory">
+    <input type="number" id="secondCategory" name="secondCategory" onchange="changeSecondCategory()">
+    <br/>
+    <label id="errorCategory2" ></label>
     <br/>
     <br/>
-    <button>Search</button>
-    <button onclick="${pageContext.request.contextPath}/users/type=add">Add</button>
+    <button onclick="search()">Search</button>
+    <button onclick="add()">Add</button>
     <br/>
     <br/>
     <table>
@@ -45,18 +49,56 @@
             <th>Customer Address</th>
             <th>Category</th>
         </tr>
-        <tr>
-            <td>Alfreds Futterkiste</td>
-            <td>Maria Anders</td>
-            <td>Germany</td>
-            <td>Germany</td>
-        </tr>
-        <tr>
-            <td>Centro comercial Moctezuma</td>
-            <td>Francisco Chang</td>
-            <td>Mexico</td>
-            <td>Mexico</td>
-        </tr>
+        <c:if test="${customerList.size() > 0}">
+            <c:forEach items="${customerList}" var="customer">
+                <tr>
+                    <td><c:out value="${customer.customerId}" /></td>
+                    <td><c:out value="${customer.name}" /></td>
+                    <td><c:out value="${customer.address}" /></td>
+                    <td><c:out value="${customer.category}" /></td>
+                </tr>
+            </c:forEach>
+        </c:if>
     </table>
+    <script>
+        function changeFirstCategory() {
+            const firstCategory = document.getElementById("firstCategory");
+            firstCategory.style.visibility = "hidden";
+        }
+
+        function changeSecondCategory() {
+            const secondCategory = document.getElementById("secondCategory");
+            secondCategory.style.visibility = "hidden";
+        }
+
+        function add() {
+            const a = document.createElement("a");
+            a.href = "${pageContext.request.contextPath}/users/type=add";
+            a.click();
+        }
+
+        function search() {
+            const firstCategory = document.getElementById("firstCategory");
+            if (!firstCategory.value) {
+                document.getElementById("errorCategory1").style.visibility = "visible";
+                return;
+            }
+            const secondCategory = document.getElementById("secondCategory");
+            if (!secondCategory.value) {
+                const errorCategory2 = document.getElementById("errorCategory2");
+                errorCategory2.textContent = "Please enter this category";
+                errorCategory2.style.visibility = "visible";
+                return;
+            } else if (firstCategory.value < secondCategory.value) {
+                const errorCategory2 = document.getElementById("errorCategory2");
+                errorCategory2.textContent = "The category 2 not is less than the category 1";
+                errorCategory2.style.visibility = "visible";
+                return;
+            }
+            const a = document.createElement("a");
+            a.href = "${pageContext.request.contextPath}/users/type=search?category1=" + firstCategory.value + "&category2=" + secondCategory.value;
+            a.click();
+        }
+    </script>
 </body>
 </html>
