@@ -43,7 +43,7 @@ public class UserServletController extends HttpServlet {
         try {
             String name = req.getParameter("name");
             String address = req.getParameter("address");
-            int category = Integer.parseInt("category");
+            int category = Integer.parseInt(req.getParameter("category"));
             Customer customer = new Customer(name, address, category);
             boolean result = customerDao.add(customer.getName(), customer.getAddress(), customer.getCategory());
             if (result) {

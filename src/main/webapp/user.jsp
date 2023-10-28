@@ -62,18 +62,18 @@
     </table>
     <script>
         function changeFirstCategory() {
-            const firstCategory = document.getElementById("firstCategory");
+            const firstCategory = document.getElementById("errorCategory1");
             firstCategory.style.visibility = "hidden";
         }
 
         function changeSecondCategory() {
-            const secondCategory = document.getElementById("secondCategory");
+            const secondCategory = document.getElementById("errorCategory2");
             secondCategory.style.visibility = "hidden";
         }
 
         function add() {
             const a = document.createElement("a");
-            a.href = "${pageContext.request.contextPath}/users/type=add";
+            a.href = "${pageContext.request.contextPath}/users?type=add";
             a.click();
         }
 
@@ -89,14 +89,14 @@
                 errorCategory2.textContent = "Please enter this category";
                 errorCategory2.style.visibility = "visible";
                 return;
-            } else if (firstCategory.value < secondCategory.value) {
+            } else if (firstCategory.value >= secondCategory.value) {
                 const errorCategory2 = document.getElementById("errorCategory2");
                 errorCategory2.textContent = "The category 2 not is less than the category 1";
                 errorCategory2.style.visibility = "visible";
                 return;
             }
             const a = document.createElement("a");
-            a.href = "${pageContext.request.contextPath}/users/type=search?category1=" + firstCategory.value + "&category2=" + secondCategory.value;
+            a.href = "${pageContext.request.contextPath}/users?type=search&category1=" + firstCategory.value + "&category2=" + secondCategory.value;
             a.click();
         }
     </script>
